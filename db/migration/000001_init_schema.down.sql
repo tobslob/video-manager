@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS "users"
+DROP TABLE IF EXISTS "videos"
+DROP TABLE IF EXISTS "video_metadatas"
+DROP TABLE IF EXISTS "annotations"
+DROP TABLE IF EXISTS "sessions"
