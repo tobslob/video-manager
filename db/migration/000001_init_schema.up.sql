@@ -40,7 +40,7 @@ CREATE TABLE "metadatas" (
   "last_modify" timestamptz NOT NULL,
   "accessed_date" timestamptz NOT NULL,
   "resolutions" int NOT NULL,
-  "keywords" varchar,
+  "keywords" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()',
   "updated_at" timestamptz NOT NULL DEFAULT 'now()'
 );

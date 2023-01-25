@@ -97,7 +97,7 @@ type GetAVideoAndMetadataRow struct {
 	LastModify   time.Time      `json:"last_modify"`
 	AccessedDate time.Time      `json:"accessed_date"`
 	Resolutions  int32          `json:"resolutions"`
-	Keywords     sql.NullString `json:"keywords"`
+	Keywords     string         `json:"keywords"`
 	CreatedAt_2  time.Time      `json:"created_at_2"`
 	UpdatedAt_2  time.Time      `json:"updated_at_2"`
 }
@@ -185,7 +185,7 @@ type ListVideosRow struct {
 	LastModify   time.Time      `json:"last_modify"`
 	AccessedDate time.Time      `json:"accessed_date"`
 	Resolutions  int32          `json:"resolutions"`
-	Keywords     sql.NullString `json:"keywords"`
+	Keywords     string         `json:"keywords"`
 	CreatedAt_2  time.Time      `json:"created_at_2"`
 	UpdatedAt_2  time.Time      `json:"updated_at_2"`
 }

@@ -20,9 +20,19 @@ type VideoAndMetadataRequest struct {
 	FileType    string         `json:"file_type" binding:"required"`
 	FileSize    sql.NullString `json:"file_size"`
 	Resolutions int32          `json:"resolutions"`
-	Keywords    sql.NullString `json:"keywords"`
+	Keywords    string         `json:"keywords"`
 }
 
+// createVideoWithMetadata godoc
+// @Summary      Create Video with necessary metadata
+// @Description  This create video and metadata in their respective table using Transaction
+// @Tags         createVideoWithMetadata
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  model.Video
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /videos 				[post]
 func (server *Server) createVideoWithMetadata(ctx *gin.Context) {
 	var req VideoAndMetadataRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -46,7 +56,6 @@ func (server *Server) createVideoWithMetadata(ctx *gin.Context) {
 			FileType:    req.FileType,
 			FileSize:    req.FileSize,
 			Resolutions: req.Resolutions,
-			Keywords:    req.Keywords,
 		},
 	}
 
@@ -63,6 +72,18 @@ type GetVideoRequest struct {
 	Id string `uri:"id" binding:"required"`
 }
 
+// getVideoWithMetadata godoc
+// @Summary      Get Video with necessary metadata
+// @Description  This retrieve a video and metadata
+// @Tags         createVideoWithMetadata
+// @Accept       json
+// @Produce      json
+// @Param        q    query     string  false  "id"
+// @Success      200  {object}  model.Video
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /videos/{id} 	[get]
 func (server *Server) getVideoWithMetadata(ctx *gin.Context) {
 	var req GetVideoRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
@@ -91,6 +112,18 @@ type VideoDeleteRequest struct {
 	ID string `uri:"id" binding:"required"`
 }
 
+// getVideoWithMetadata godoc
+// @Summary      Delete Video
+// @Description  This delete a video associated metadata and all associated Annotations
+// @Tags         createVideoWithMetadata
+// @Accept       json
+// @Produce      json
+// @Param        q    query     string  false  "id"
+// @Success      200  {object}  model.Video
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /videos/{id} 	[delete]
 func (server *Server) deleteVideo(ctx *gin.Context) {
 	var req VideoDeleteRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
@@ -101,7 +134,7 @@ func (server *Server) deleteVideo(ctx *gin.Context) {
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	id, _ := uuid.Parse(req.ID)
 
-	err := server.store.DeleteVideo(ctx, db.DeleteVideoParams{UserID: authPayload.UserID, ID: id})
+	err := server.store.DeleteVideoMetadataAndAnnotationTx(ctx, db.DeleteVideoParams{UserID: authPayload.UserID, ID: id})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

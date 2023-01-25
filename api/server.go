@@ -44,20 +44,22 @@ func errorResponse(err error) gin.H {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
-	router.POST("/users", server.createUser)
-	router.POST("/users/login", server.loginUser)
+	unsecureRoutes := router.Group("/api/v1")
 
-	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
+	unsecureRoutes.POST("/users", server.createUser)
+	unsecureRoutes.POST("/users/login", server.loginUser)
+
+	authRoutes := router.Group("/api/v1").Use(authMiddleware(server.tokenMaker))
 
 	authRoutes.POST("/videos", server.createVideoWithMetadata)
-	authRoutes.GET("/video/:id", server.getVideoWithMetadata)
-	authRoutes.DELETE("/video/:id", server.deleteVideo)
+	authRoutes.GET("/videos/:id", server.getVideoWithMetadata)
+	authRoutes.DELETE("/videos/:id", server.deleteVideo)
 
-	authRoutes.POST("/annotation", server.createAnnotation)
-	authRoutes.GET("/annotation/:video_id", server.getAnnotation)
+	authRoutes.POST("/annotations", server.createAnnotation)
+	authRoutes.GET("/annotations/:id", server.getAnnotation)
 	authRoutes.GET("/annotations", server.listAnnotations)
-	authRoutes.DELETE("/annotation/:video_id", server.deleteAnnotation)
-	authRoutes.PATCH("/annotation", server.updateAnnotation)
+	authRoutes.DELETE("/annotations/:id", server.deleteAnnotation)
+	authRoutes.PATCH("/annotations/:id/:video_id", server.updateAnnotation)
 
 	server.router = router
 }

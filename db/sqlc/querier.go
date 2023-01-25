@@ -17,6 +17,7 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	CreateVideo(ctx context.Context, arg CreateVideoParams) (Video, error)
 	DeleteAnnotation(ctx context.Context, arg DeleteAnnotationParams) error
+	DeleteAnnotations(ctx context.Context, arg DeleteAnnotationsParams) error
 	DeleteMetadata(ctx context.Context, videoID uuid.UUID) error
 	DeleteVideo(ctx context.Context, arg DeleteVideoParams) error
 	GetAVideoAndMetadata(ctx context.Context, arg GetAVideoAndMetadataParams) (GetAVideoAndMetadataRow, error)

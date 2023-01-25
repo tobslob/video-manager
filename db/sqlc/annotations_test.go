@@ -57,8 +57,8 @@ func TestCreateAnnotation(t *testing.T) {
 func TestGetAnnotion(t *testing.T) {
 	annotation1 := createRandomAnnotation(t)
 	annotation2, err := testQueries.GetAnnotation(context.Background(), GetAnnotationParams{
-		VideoID: annotation1.VideoID,
-		UserID:  annotation1.UserID,
+		ID:     annotation1.ID,
+		UserID: annotation1.UserID,
 	})
 
 	require.NoError(t, err)
@@ -75,8 +75,9 @@ func TestUpdateAnnotation(t *testing.T) {
 	annotation1 := createRandomAnnotation(t)
 
 	updatedArg := UpdateAnnotationParams{
-		VideoID: annotation1.VideoID,
+		ID:      annotation1.ID,
 		UserID:  annotation1.UserID,
+		VideoID: annotation1.VideoID,
 		Type:    utils.RandomString(7),
 		Note:    utils.RandomString(20),
 		Title:   utils.RandomString(8),
@@ -98,16 +99,16 @@ func TestUpdateAnnotation(t *testing.T) {
 	require.Equal(t, annotation1.VideoID, annotation1.VideoID)
 }
 
-func TestDeleteAnnotation(t *testing.T) {
+func TestDeleteAnnotations(t *testing.T) {
 	annotation1 := createRandomAnnotation(t)
 
-	deleteArg := DeleteAnnotationParams{VideoID: annotation1.VideoID, UserID: annotation1.UserID}
-	err := testQueries.DeleteAnnotation(context.Background(), deleteArg)
+	deleteArg := DeleteAnnotationsParams{VideoID: annotation1.VideoID, UserID: annotation1.UserID}
+	err := testQueries.DeleteAnnotations(context.Background(), deleteArg)
 	require.NoError(t, err)
 
 	annotation2, err := testQueries.GetAnnotation(context.Background(), GetAnnotationParams{
-		VideoID: annotation1.VideoID,
-		UserID:  annotation1.UserID,
+		ID:     annotation1.ID,
+		UserID: annotation1.UserID,
 	})
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, annotation2)

@@ -37,6 +37,16 @@ func newUserResponse(user db.User) userResponse {
 	}
 }
 
+// createUser godoc
+// @Summary      Create a user account
+// @Description  Onboard user to the application
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  model.User
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /users 				[post]
 func (server *Server) createUser(ctx *gin.Context) {
 	var req createUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -90,6 +100,16 @@ type loginUserResponse struct {
 	User                  userResponse `json:"user"`
 }
 
+// loginUser godoc
+// @Summary      Give user access to the api
+// @Description  This API generate a JWT token to access all other API
+// @Tags         login
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  model.User
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /users 				[post]
 func (server *Server) loginUser(ctx *gin.Context) {
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {

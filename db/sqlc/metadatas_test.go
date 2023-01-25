@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"testing"
 
@@ -25,7 +24,7 @@ func createRandomVideoMetadata(t *testing.T) Metadata {
 		Width:    500,
 		Height:   700,
 		FileType: "mp4",
-		Keywords: sql.NullString{String: "nice funny", Valid: true},
+		Keywords: "key words",
 	}
 
 	metadata, err := testQueries.CreateMetadata(context.Background(), metadataArg)
@@ -71,7 +70,7 @@ func TestUpdateVideoMetadatat(t *testing.T) {
 		ID:       metadata1.ID,
 		Width:    40,
 		Height:   50,
-		Keywords: sql.NullString{String: "new keyword", Valid: true},
+		Keywords: "key words",
 	}
 	metadata2, err := testQueries.UpdateMetadata(context.Background(), updatedArg)
 	require.NoError(t, err)

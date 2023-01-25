@@ -30,7 +30,7 @@ func TestCreatVideoWithMetadataTx(t *testing.T) {
 			AccessedDate: time.Now(),
 			Resolutions:  1000,
 			LastModify:   time.Now(),
-			Keywords:     sql.NullString{"video youtube", true},
+			Keywords:     "key words",
 		},
 	})
 	require.NoError(t, err)

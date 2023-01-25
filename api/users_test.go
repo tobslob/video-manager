@@ -156,7 +156,7 @@ func TestCreateUserAPI(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			request, err := http.NewRequest(http.MethodPost, "/users", bytes.NewReader(data))
+			request, err := http.NewRequest(http.MethodPost, "/api/v1/users", bytes.NewReader(data))
 			require.NoError(t, err)
 
 			Server.router.ServeHTTP(recorder, request)
@@ -275,7 +275,7 @@ func TestLoginUserAPI(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/users/login"
+			url := "/api/v1/users/login"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 

@@ -41,7 +41,7 @@ type CreateMetadataParams struct {
 	LastModify   time.Time      `json:"last_modify"`
 	AccessedDate time.Time      `json:"accessed_date"`
 	Resolutions  int32          `json:"resolutions"`
-	Keywords     sql.NullString `json:"keywords"`
+	Keywords     string         `json:"keywords"`
 }
 
 func (q *Queries) CreateMetadata(ctx context.Context, arg CreateMetadataParams) (Metadata, error) {
@@ -117,10 +117,10 @@ RETURNING id, video_id, width, height, file_type, file_size, last_modify, access
 `
 
 type UpdateMetadataParams struct {
-	ID       uuid.UUID      `json:"id"`
-	Width    int32          `json:"width"`
-	Height   int32          `json:"height"`
-	Keywords sql.NullString `json:"keywords"`
+	ID       uuid.UUID `json:"id"`
+	Width    int32     `json:"width"`
+	Height   int32     `json:"height"`
+	Keywords string    `json:"keywords"`
 }
 
 func (q *Queries) UpdateMetadata(ctx context.Context, arg UpdateMetadataParams) (Metadata, error) {

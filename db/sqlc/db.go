@@ -42,6 +42,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.deleteAnnotationStmt, err = db.PrepareContext(ctx, deleteAnnotation); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteAnnotation: %w", err)
 	}
+	if q.deleteAnnotationsStmt, err = db.PrepareContext(ctx, deleteAnnotations); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteAnnotations: %w", err)
+	}
 	if q.deleteMetadataStmt, err = db.PrepareContext(ctx, deleteMetadata); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteMetadata: %w", err)
 	}
@@ -114,6 +117,11 @@ func (q *Queries) Close() error {
 	if q.deleteAnnotationStmt != nil {
 		if cerr := q.deleteAnnotationStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing deleteAnnotationStmt: %w", cerr)
+		}
+	}
+	if q.deleteAnnotationsStmt != nil {
+		if cerr := q.deleteAnnotationsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteAnnotationsStmt: %w", cerr)
 		}
 	}
 	if q.deleteMetadataStmt != nil {
@@ -226,6 +234,7 @@ type Queries struct {
 	createUserStmt           *sql.Stmt
 	createVideoStmt          *sql.Stmt
 	deleteAnnotationStmt     *sql.Stmt
+	deleteAnnotationsStmt    *sql.Stmt
 	deleteMetadataStmt       *sql.Stmt
 	deleteVideoStmt          *sql.Stmt
 	getAVideoAndMetadataStmt *sql.Stmt
@@ -251,6 +260,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		createUserStmt:           q.createUserStmt,
 		createVideoStmt:          q.createVideoStmt,
 		deleteAnnotationStmt:     q.deleteAnnotationStmt,
+		deleteAnnotationsStmt:    q.deleteAnnotationsStmt,
 		deleteMetadataStmt:       q.deleteMetadataStmt,
 		deleteVideoStmt:          q.deleteVideoStmt,
 		getAVideoAndMetadataStmt: q.getAVideoAndMetadataStmt,

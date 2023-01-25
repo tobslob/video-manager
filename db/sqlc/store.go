@@ -13,6 +13,7 @@ import (
 type Store interface {
 	Querier
 	CreatVideoWithMetadataTx(ctx context.Context, arg CreateVideoWithMetadata) (CreatVideoWithMetadataTxResult, error)
+	DeleteVideoMetadataAndAnnotationTx(ctx context.Context, arg DeleteVideoParams) error
 }
 
 // SQLStore provides all  functions to excute SQL queries and transactions
@@ -109,7 +110,7 @@ func (store *SQLStore) DeleteVideoMetadataAndAnnotationTx(ctx context.Context, a
 			return err
 		}
 
-		err = q.DeleteAnnotation(ctx, DeleteAnnotationParams{VideoID: arg.ID, UserID: arg.UserID})
+		err = q.DeleteAnnotations(ctx, DeleteAnnotationsParams{VideoID: arg.ID, UserID: arg.UserID})
 		if err != nil {
 			return err
 		}

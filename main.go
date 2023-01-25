@@ -10,6 +10,20 @@ import (
 	"github.com/tobslob/video-manager/utils"
 )
 
+// @title           Video Manager API
+// @version         1.0
+// @description     This API enable us to manage videos, metadata and their annotations.
+
+// @contact.name   Kazeem Odutola
+// @contact.email  odutola_k@yahoo.ca
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
+// @securityDefinitions.basic  BeererToken
 func main() {
 	config, err := utils.LoadConfig(".")
 	if err != nil {

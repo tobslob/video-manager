@@ -74,31 +74,45 @@ func (q *Queries) CreateAnnotation(ctx context.Context, arg CreateAnnotationPara
 }
 
 const deleteAnnotation = `-- name: DeleteAnnotation :exec
-DELETE FROM annotations WHERE video_id = $1 AND user_id = $2
+DELETE FROM annotations WHERE id = $1 AND user_id = $2
 `
 
 type DeleteAnnotationParams struct {
+	ID     uuid.UUID `json:"id"`
+	UserID uuid.UUID `json:"user_id"`
+}
+
+func (q *Queries) DeleteAnnotation(ctx context.Context, arg DeleteAnnotationParams) error {
+	_, err := q.exec(ctx, q.deleteAnnotationStmt, deleteAnnotation, arg.ID, arg.UserID)
+	return err
+}
+
+const deleteAnnotations = `-- name: DeleteAnnotations :exec
+DELETE FROM annotations WHERE video_id = $1 AND user_id = $2
+`
+
+type DeleteAnnotationsParams struct {
 	VideoID uuid.UUID `json:"video_id"`
 	UserID  uuid.UUID `json:"user_id"`
 }
 
-func (q *Queries) DeleteAnnotation(ctx context.Context, arg DeleteAnnotationParams) error {
-	_, err := q.exec(ctx, q.deleteAnnotationStmt, deleteAnnotation, arg.VideoID, arg.UserID)
+func (q *Queries) DeleteAnnotations(ctx context.Context, arg DeleteAnnotationsParams) error {
+	_, err := q.exec(ctx, q.deleteAnnotationsStmt, deleteAnnotations, arg.VideoID, arg.UserID)
 	return err
 }
 
 const getAnnotation = `-- name: GetAnnotation :one
 SELECT id, video_id, user_id, type, note, title, label, pause, start_time, end_time, created_at, updated_at FROM annotations
-WHERE video_id = $1 AND user_id = $2 LIMIT 1
+WHERE id = $1 AND user_id = $2 LIMIT 1
 `
 
 type GetAnnotationParams struct {
-	VideoID uuid.UUID `json:"video_id"`
-	UserID  uuid.UUID `json:"user_id"`
+	ID     uuid.UUID `json:"id"`
+	UserID uuid.UUID `json:"user_id"`
 }
 
 func (q *Queries) GetAnnotation(ctx context.Context, arg GetAnnotationParams) (Annotation, error) {
-	row := q.queryRow(ctx, q.getAnnotationStmt, getAnnotation, arg.VideoID, arg.UserID)
+	row := q.queryRow(ctx, q.getAnnotationStmt, getAnnotation, arg.ID, arg.UserID)
 	var i Annotation
 	err := row.Scan(
 		&i.ID,
@@ -175,19 +189,20 @@ func (q *Queries) ListAnnotations(ctx context.Context, arg ListAnnotationsParams
 
 const updateAnnotation = `-- name: UpdateAnnotation :one
 UPDATE annotations
-SET note = $3,
-  title = $4,
-  label = $5,
-  pause = $6,
-  start_time =$7,
-  end_time =$8,
-  type = $9
-WHERE video_id = $1 AND user_id = $2 RETURNING id, video_id, user_id, type, note, title, label, pause, start_time, end_time, created_at, updated_at
+SET note = $4,
+  title = $5,
+  label = $6,
+  pause = $7,
+  start_time =$8,
+  end_time =$9,
+  type = $10
+WHERE id = $1 AND user_id = $2 AND video_id = $3 RETURNING id, video_id, user_id, type, note, title, label, pause, start_time, end_time, created_at, updated_at
 `
 
 type UpdateAnnotationParams struct {
-	VideoID   uuid.UUID `json:"video_id"`
+	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"user_id"`
+	VideoID   uuid.UUID `json:"video_id"`
 	Note      string    `json:"note"`
 	Title     string    `json:"title"`
 	Label     string    `json:"label"`
@@ -199,8 +214,9 @@ type UpdateAnnotationParams struct {
 
 func (q *Queries) UpdateAnnotation(ctx context.Context, arg UpdateAnnotationParams) (Annotation, error) {
 	row := q.queryRow(ctx, q.updateAnnotationStmt, updateAnnotation,
-		arg.VideoID,
+		arg.ID,
 		arg.UserID,
+		arg.VideoID,
 		arg.Note,
 		arg.Title,
 		arg.Label,

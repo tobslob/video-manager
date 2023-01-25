@@ -24,6 +24,17 @@ type createAnnotationRequest struct {
 	EndTime   string    `json:"end_time" binding:"required"`
 }
 
+// createAnnotation godoc
+// @Summary      Create necessary video Annotation
+// @Description  Creates video annotation
+// @Tags         annotation
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  model.Annotation
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /annotation 		[post]
 func (server *Server) createAnnotation(ctx *gin.Context) {
 	var req createAnnotationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -83,9 +94,20 @@ func (server *Server) createAnnotation(ctx *gin.Context) {
 }
 
 type getAnnotationRequest struct {
-	VideoID string `uri:"video_id" binding:"required"`
+	ID string `uri:"id" binding:"required"`
 }
 
+// getAnnotation godoc
+// @Summary      Get necessary video Annotation
+// @Description  Get a single video annotation
+// @Tags         annotation
+// @Produce      json
+// @Param        id   path  string  true  "id"
+// @Success      200  {object}  model.Annotation
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /annotations/{id} 	[get]
 func (server *Server) getAnnotation(ctx *gin.Context) {
 	var req getAnnotationRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
@@ -94,9 +116,9 @@ func (server *Server) getAnnotation(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	id, _ := uuid.Parse(req.VideoID)
+	id, _ := uuid.Parse(req.ID)
 	annotation, err := server.store.GetAnnotation(ctx, db.GetAnnotationParams{
-		VideoID: id, UserID: authPayload.UserID,
+		ID: id, UserID: authPayload.UserID,
 	})
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -116,6 +138,16 @@ type listAnnotationsRequest struct {
 	PageSize int32  `form:"page_size" binding:"required,min=1"`
 }
 
+// listAnnotations godoc
+// @Summary      Get all associated video annotations
+// @Description  A paginated API to list all associated video annotations
+// @Tags         annotation
+// @Produce      json
+// @Success      200  {object}  model.Annotation
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /annotations 	[get]
 func (server *Server) listAnnotations(ctx *gin.Context) {
 	var req listAnnotationsRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
@@ -141,6 +173,16 @@ func (server *Server) listAnnotations(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, accounts)
 }
 
+// deleteAnnotation godoc
+// @Summary      Delete a single video annotations
+// @Description  Delete video annotation
+// @Tags         annotation
+// @Param        id   path  string  true  "id"
+// @Success      200  {object}  model.Annotation
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /annotations/{id} 	[delete]
 func (server *Server) deleteAnnotation(ctx *gin.Context) {
 	var req getAnnotationRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
@@ -149,8 +191,8 @@ func (server *Server) deleteAnnotation(ctx *gin.Context) {
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	id, _ := uuid.Parse(req.VideoID)
-	deleteArg := db.DeleteAnnotationParams{VideoID: id, UserID: authPayload.UserID}
+	id, _ := uuid.Parse(req.ID)
+	deleteArg := db.DeleteAnnotationParams{ID: id, UserID: authPayload.UserID}
 
 	err := server.store.DeleteAnnotation(ctx, deleteArg)
 	if err != nil {
@@ -162,7 +204,8 @@ func (server *Server) deleteAnnotation(ctx *gin.Context) {
 }
 
 type UpdateAnnotationRequest struct {
-	VideoID   string `json:"video_id"`
+	ID        string `uri:"id" binding:"required"`
+	VideoID   string `uri:"video_id" binding:"required"`
 	Note      string `json:"note"`
 	Title     string `json:"title" binding:"max=150"`
 	Label     string `json:"label" binding:"max=50"`
@@ -172,17 +215,35 @@ type UpdateAnnotationRequest struct {
 	Type      string `json:"type"`
 }
 
+// updateAnnotation godoc
+// @Summary      update a video Annotation
+// @Description  Update a video annotation i.e add note or title
+// @Tags         annotation
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  model.Annotation
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /annotations 	[post]
 func (server *Server) updateAnnotation(ctx *gin.Context) {
 	var req UpdateAnnotationRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	id, _ := uuid.Parse(req.VideoID)
+	id, _ := uuid.Parse(req.ID)
+	video_id, _ := uuid.Parse(req.VideoID)
 	updateArg := db.UpdateAnnotationParams{
-		VideoID:   id,
+		ID:        id,
+		VideoID:   video_id,
 		UserID:    authPayload.UserID,
 		Note:      req.Note,
 		Title:     req.Title,
@@ -196,7 +257,7 @@ func (server *Server) updateAnnotation(ctx *gin.Context) {
 	updateArg.EndTime = utils.ParseTimeToStringRepresentation(req.EndTime)
 	updateArg.StartTime = utils.ParseTimeToStringRepresentation(req.StartTime)
 
-	video, err := server.store.GetVideo(ctx, db.GetVideoParams{ID: id, UserID: authPayload.UserID})
+	video, err := server.store.GetVideo(ctx, db.GetVideoParams{ID: video_id, UserID: authPayload.UserID})
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))

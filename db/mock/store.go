@@ -140,6 +140,20 @@ func (mr *MockStoreMockRecorder) DeleteAnnotation(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAnnotation", reflect.TypeOf((*MockStore)(nil).DeleteAnnotation), arg0, arg1)
 }
 
+// DeleteAnnotations mocks base method.
+func (m *MockStore) DeleteAnnotations(arg0 context.Context, arg1 db.DeleteAnnotationsParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAnnotations", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAnnotations indicates an expected call of DeleteAnnotations.
+func (mr *MockStoreMockRecorder) DeleteAnnotations(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAnnotations", reflect.TypeOf((*MockStore)(nil).DeleteAnnotations), arg0, arg1)
+}
+
 // DeleteMetadata mocks base method.
 func (m *MockStore) DeleteMetadata(arg0 context.Context, arg1 uuid.UUID) error {
 	m.ctrl.T.Helper()
@@ -166,6 +180,20 @@ func (m *MockStore) DeleteVideo(arg0 context.Context, arg1 db.DeleteVideoParams)
 func (mr *MockStoreMockRecorder) DeleteVideo(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteVideo", reflect.TypeOf((*MockStore)(nil).DeleteVideo), arg0, arg1)
+}
+
+// DeleteVideoMetadataAndAnnotationTx mocks base method.
+func (m *MockStore) DeleteVideoMetadataAndAnnotationTx(arg0 context.Context, arg1 db.DeleteVideoParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteVideoMetadataAndAnnotationTx", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteVideoMetadataAndAnnotationTx indicates an expected call of DeleteVideoMetadataAndAnnotationTx.
+func (mr *MockStoreMockRecorder) DeleteVideoMetadataAndAnnotationTx(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteVideoMetadataAndAnnotationTx", reflect.TypeOf((*MockStore)(nil).DeleteVideoMetadataAndAnnotationTx), arg0, arg1)
 }
 
 // GetAVideoAndMetadata mocks base method.
