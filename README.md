@@ -113,5 +113,3 @@ https://documenter.getpostman.com/view/6225567/2s8ZDcyKSF
 ```
 
 ## Run using Docker Image
-
-----
