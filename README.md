@@ -67,25 +67,8 @@ docker run -d --name dev-postgres \
 docker ps
 
 ```
-Command to run after you have postgres container runing
 ```sh
- make postgres
-```
-Command help to creates a DB name video-manager 
-```sh
- make createdb
-```
-Command creates table into the database
-```sh
- make migrateup
-```
- Command help to run unit test
-```sh
- make test
-```
- Command help to start server
-```sh
- make server
+ docker compose up
 ```
 
 ```sh
@@ -123,4 +106,15 @@ https://documenter.getpostman.com/view/6225567/2s8ZDcyKSF
 
 ## Run using Docker Image
 
+Use the following command
 
+```sh
+docker pull tobslob1/kazeem:server
+```
+
+```sh
+docker run -p 8080:8080 tobslob1/kazeem:server
+```
+```sh
+Application is ready to receive connection @ http://localhost:8080
+```

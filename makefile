@@ -1,14 +1,14 @@
 postgres:
-		docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+		docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=kazeem -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
 
 createdb:
-		docker exec -it postgres12 createdb --username=postgres --owner=postgres video-manager
+		docker exec -it postgres12 createdb --username=kazeem --owner=postgres video-manager
 
 dropdb:
-		docker exec -it postgres12 dropdb --username=postgres video-manager
+		docker exec -it postgres12 dropdb --username=kazeem video-manager
 
 migrateup:
-		migrate -path db/migration -database "postgresql://postgres:secret@0.0.0.0:5432/video-manager?sslmode=disable" -verbose up
+		migrate -path db/migration -database "postgresql://kazeem:secret@0.0.0.0:5432/video-manager?sslmode=disable" -verbose up
 
 migratedown:
 		migrate -path db/migration -database "postgresql://postgres:secret@0.0.0.0:5432/video-manager?sslmode=disable" -verbose down

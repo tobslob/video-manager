@@ -7,9 +7,6 @@ RUN go build -o main main.go
 COPY . ./
 
 RUN go build -v -o server main.go
-# RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz && \
-#           sudo mv migrate /usr/bin && \
-#           which migrate
 
 RUN chmod 777 wait-for.sh start.sh
 # Build the binary.

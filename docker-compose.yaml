@@ -3,15 +3,11 @@ services:
   postgres:
     image: postgres:14-alpine
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=kazeem
       - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=video-manager
       - DB_DRIVER=postgres
-      - SERVER_ADDRESS=0.0.0.0:8080
-      - TOKEN_SYMMETRIC_KEY=12345678901234567890123456789012
-      - ACCESS_TOKEN_DURATION=600m
-      - REFRESH_TOKEN_DURATION=600m
-      - DB_SOURCE=postgresql://postgres:secret@postgres:5432/video-manager?sslmode=disable
+      - DB_SOURCE=postgresql://kazeem:secret@postgres:5432/video-manager?sslmode=disable
   api:
     build:
       context: .
@@ -19,7 +15,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_SOURCE=postgresql://postgres:secret@postgres:5432/video-manager?sslmode=disable
+      - DB_SOURCE=postgresql://kazeem:secret@postgres:5432/video-manager?sslmode=disable
     depends_on:
       - postgres
     entrypoint: ["/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh"]
