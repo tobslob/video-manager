@@ -1,24 +1,24 @@
-FROM golang:1.19-buster as builder
-
+# Build stage
+FROM golang:1.19-alpine3.16 AS builder
 WORKDIR /app
-
-COPY go.* ./
-RUN go mod download
+COPY . .
+RUN go build -o main main.go
 
 COPY . ./
 
 RUN go build -v -o server main.go
+RUN apk add curl
 RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
 
 # Build the binary.
-FROM debian:buster-slim
-RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/server /app/server
+FROM alpine:3.16
+WORKDIR /app
+COPY --from=builder /app/main .
 COPY app.env .
-COPY db/migration ./migration
+COPY start.sh .
+COPY wait-for.sh .
+COPY db/migration ./db/migration
 
 EXPOSE 8080
-CMD ["/app/server"]
-ENTRYPOINT ["/app/migration","-path","/app/migration","-databasee "$DB_SOURCE" -verbose up"]
+CMD ["/app/main"]
+ENTRYPOINT ["chmod", "+x", "./app/start.sh"]

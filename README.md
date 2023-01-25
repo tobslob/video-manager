@@ -62,21 +62,25 @@ docker run -d --name dev-postgres \
 docker ps
 
 ```
-
+Command to run after you have postgres container runing
 ```sh
- make postgres - Command to run after you have postgres container runing
- ```
- ```sh
- make createdb - Command help to creates a DB name video-manager 
- ```
- ```sh
- make migrateup - Command creates table into the database
- ```
- ```sh
- make test - Command help to run unit test
- ```
+ make postgres
+```
+Command help to creates a DB name video-manager 
 ```sh
- make server - Command help to start server
+ make createdb
+```
+Command creates table into the database
+```sh
+ make migrateup
+```
+ Command help to run unit test
+```sh
+ make test
+```
+ Command help to start server
+```sh
+ make server
 ```
 
 ```sh
@@ -113,3 +117,5 @@ https://documenter.getpostman.com/view/6225567/2s8ZDcyKSF
 ```
 
 ## Run using Docker Image
+
+
