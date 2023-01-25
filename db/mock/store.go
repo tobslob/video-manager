@@ -140,6 +140,20 @@ func (mr *MockStoreMockRecorder) DeleteAnnotation(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAnnotation", reflect.TypeOf((*MockStore)(nil).DeleteAnnotation), arg0, arg1)
 }
 
+// DeleteMetadata mocks base method.
+func (m *MockStore) DeleteMetadata(arg0 context.Context, arg1 uuid.UUID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteMetadata", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteMetadata indicates an expected call of DeleteMetadata.
+func (mr *MockStoreMockRecorder) DeleteMetadata(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMetadata", reflect.TypeOf((*MockStore)(nil).DeleteMetadata), arg0, arg1)
+}
+
 // DeleteVideo mocks base method.
 func (m *MockStore) DeleteVideo(arg0 context.Context, arg1 db.DeleteVideoParams) error {
 	m.ctrl.T.Helper()

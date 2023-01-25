@@ -24,3 +24,6 @@ UPDATE metadatas
 SET width = $2, height = $3, keywords = $4
 WHERE id = $1
 RETURNING *;
+
+-- name: DeleteMetadata :exec
+DELETE FROM metadatas WHERE video_id = $1;

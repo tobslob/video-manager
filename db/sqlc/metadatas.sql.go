@@ -75,6 +75,15 @@ func (q *Queries) CreateMetadata(ctx context.Context, arg CreateMetadataParams) 
 	return i, err
 }
 
+const deleteMetadata = `-- name: DeleteMetadata :exec
+DELETE FROM metadatas WHERE video_id = $1
+`
+
+func (q *Queries) DeleteMetadata(ctx context.Context, videoID uuid.UUID) error {
+	_, err := q.exec(ctx, q.deleteMetadataStmt, deleteMetadata, videoID)
+	return err
+}
+
 const getMetadata = `-- name: GetMetadata :one
 SELECT id, video_id, width, height, file_type, file_size, last_modify, accessed_date, resolutions, keywords, created_at, updated_at FROM metadatas
 WHERE video_id = $1 LIMIT 1

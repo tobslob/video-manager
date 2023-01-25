@@ -86,3 +86,26 @@ func (server *Server) getVideoWithMetadata(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, result)
 }
+
+type VideoDeleteRequest struct {
+	ID string `uri:"id" binding:"required"`
+}
+
+func (server *Server) deleteVideo(ctx *gin.Context) {
+	var req VideoDeleteRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	id, _ := uuid.Parse(req.ID)
+
+	err := server.store.DeleteVideo(ctx, db.DeleteVideoParams{UserID: authPayload.UserID, ID: id})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
+}

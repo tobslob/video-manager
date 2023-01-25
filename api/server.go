@@ -51,6 +51,7 @@ func (server *Server) setupRouter() {
 
 	authRoutes.POST("/videos", server.createVideoWithMetadata)
 	authRoutes.GET("/video/:id", server.getVideoWithMetadata)
+	authRoutes.DELETE("/video/:id", server.deleteVideo)
 
 	authRoutes.POST("/annotation", server.createAnnotation)
 	authRoutes.GET("/annotation/:video_id", server.getAnnotation)

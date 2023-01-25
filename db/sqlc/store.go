@@ -99,3 +99,31 @@ func (store *SQLStore) CreatVideoWithMetadataTx(ctx context.Context, arg CreateV
 
 	return result, err
 }
+
+func (store *SQLStore) DeleteVideoMetadataAndAnnotationTx(ctx context.Context, arg DeleteVideoParams) error {
+	err := store.execTx(ctx, func(q *Queries) error {
+		var err error
+
+		err = q.DeleteMetadata(ctx, arg.ID)
+		if err != nil {
+			return err
+		}
+
+		err = q.DeleteAnnotation(ctx, DeleteAnnotationParams{VideoID: arg.ID, UserID: arg.UserID})
+		if err != nil {
+			return err
+		}
+
+		err = q.DeleteVideo(ctx, DeleteVideoParams{
+			UserID: arg.UserID,
+			ID:     arg.ID,
+		})
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
+}
