@@ -38,6 +38,9 @@ cd video-manager
 ```sh
  go install
 ```
+```sh
+ go mod tidy
+```
 
 ## Initial setup
 
