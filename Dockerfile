@@ -9,7 +9,7 @@ COPY . ./
 RUN go build -v -o server main.go
 RUN apk add curl
 RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
-
+RUN chmod 777 wait-for.sh start.sh
 # Build the binary.
 FROM alpine:3.16
 WORKDIR /app

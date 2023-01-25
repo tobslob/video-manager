@@ -22,11 +22,5 @@ services:
       - DB_SOURCE=postgresql://postgres:secret@postgres:5432/video-manager?sslmode=disable
     depends_on:
       - postgres-db
-    entrypoint:
-      [
-        "/app/wait-for.sh",
-        "postgres:5432",
-        "--",
-        "/app/start.sh"
-      ]
-    command: [ "/app/main" ]
+    entrypoint: ["/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh"]
+    command: ["/app/main"]
