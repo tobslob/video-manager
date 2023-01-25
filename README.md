@@ -16,6 +16,8 @@
 
 `Video-Manager` is a service that helps to manage video annotations
 
+https://documenter.getpostman.com/view/6225567/2s8ZDcyKSF
+
 ### Databases
 
 - postgresql://postgres:secret@0.0.0.0:5432/video-manager?sslmode=disable
