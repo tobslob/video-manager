@@ -31,7 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Could not load env", err)
 	}
-	conn, err := sql.Open(config.DBDriver, config.DBSource)
+	conn, err := sql.Open("postgres", config.DBSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db:", err)
 	}
