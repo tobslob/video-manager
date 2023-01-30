@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 	"github.com/tobslob/video-manager/api"
 	db "github.com/tobslob/video-manager/db/sqlc"
