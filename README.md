@@ -109,11 +109,11 @@ https://documenter.getpostman.com/view/6225567/2s8ZDcyKSF
 Use the following command
 
 ```sh
-docker pull tobslob1/kazeem:server
+docker pull public.ecr.aws/v6s3m2h0/video-manager
 ```
 
 ```sh
-docker run -p 8080:8080 tobslob1/kazeem:server
+docker run -p 8080:8080 public.ecr.aws/v6s3m2h0/video-manager
 ```
 ```sh
 Application is ready to receive connection @ http://localhost:8080
